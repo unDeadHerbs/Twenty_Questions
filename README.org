@@ -1,0 +1,5 @@
+* Twenty Questions
+A modification on the classic "Twenty Quesitons" game.  Rather than
+asking pure "yes" or "no" quesions, this asks about properties of the
+referant.  As the user interacts with this progam it builds up a
+database of answers and a knoledge tree of properties.
