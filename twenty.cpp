@@ -104,9 +104,9 @@ struct QAdb{
 	}
 } qadb;
 
-bool isYes(std::string const& answer){ return answer in<std::string> {"yes","y","yep"}; }
-bool isNo(std::string const& answer){ return answer in<std::string> {"no","n","nope"}; }
-bool isInvalid(std::string const& answer){ return answer in<std::string> {"invalid","i"}; }
+bool isYes(std::string const& answer){ return answer in {"yes"s,"y"s,"yep"s}; }
+bool isNo(std::string const& answer){ return answer in {"no"s,"n"s,"nope"s}; }
+bool isInvalid(std::string const& answer){ return answer in {"invalid"s,"i"s}; }
 
 std::string ask_str(const std::string& question){
 	std::cout << question << "\n : ";
