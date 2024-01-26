@@ -14,8 +14,16 @@ namespace fs = std::filesystem;
 // Helper for variant::visit
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 
+template<typename T> struct _MemberCheckerBound{ T value; _MemberCheckerBound(T& v):value(v){} };
 template<typename T>
-bool in(T e,std::vector<T> const v){ return std::ranges::find(v, e) != v.end(); }
+auto operator<(_MemberCheckerBound<T> const e,std::vector<T> const v){
+	return std::ranges::find(v, e.value) != v.end(); }
+struct _MemberChecker{};
+template<typename T>
+auto operator+(T lhs,_MemberChecker){ return (_MemberCheckerBound<T>)lhs; }
+#define in + _MemberChecker() < std::vector
+//template<typename T>
+//bool in(T e,std::vector<T> const v){ return std::ranges::find(v, e) != v.end(); }
 
 using std::literals::string_literals::operator""s;
 std::string operator+(int const lhs, std::string const& rhs){ return std::to_string(lhs) + rhs; }
@@ -63,20 +71,20 @@ struct QAdb{
 		qas.push_back((Question){yes,no,prop});
 		changed = true;
 		return (NEWGAME==parent
-						? start 
-						: std::get<Question>(qas[parent]).*(yorn
-																								? &Question::yes
-																								: &Question::no))
-			= qas.size()-1;
+		        ? start
+		        : std::get<Question>(qas[parent]).*(yorn
+		                                            ? &Question::yes
+		                                            : &Question::no))
+		  = qas.size()-1;
 	}
 	std::string serialize() const{
 		return
-			"s,"+std::to_string(start)+"\n"+
-			std::transform_reduce(qas.begin(), qas.end(),
-														std::string(""), std::plus{},
-														[](QA qa){return std::visit(overloaded{
-																	[](Question q){return "q,"+q.serialize();},
-																	[](Answer a){return "a,"+(std::string)a;}},qa)+"\n";});		
+		  "s,"+std::to_string(start)+"\n"+
+		  std::transform_reduce(qas.begin(), qas.end(),
+		                        std::string(""), std::plus{},
+		                        [](QA qa){return std::visit(overloaded{
+		                              [](Question q){return "q,"+q.serialize();},
+		                                [](Answer a){return "a,"+(std::string)a;}},qa)+"\n";});
 	}
 	void deserialize(std::string serial){
 		qas.clear();
@@ -96,9 +104,9 @@ struct QAdb{
 	}
 } qadb;
 
-bool isYes(const std::string& answer){ return in(answer, {"yes","y","yep"}); }
-bool isNo(const std::string& answer){ return in(answer, {"no","n","nope"}); }
-bool isInvalid(const std::string& answer){ return in(answer, {"invalid","i"}); }
+bool isYes(std::string const& answer){ return answer in<std::string> {"yes","y","yep"}; }
+bool isNo(std::string const& answer){ return answer in<std::string> {"no","n","nope"}; }
+bool isInvalid(std::string const& answer){ return answer in<std::string> {"invalid","i"}; }
 
 std::string ask_str(const std::string& question){
 	std::cout << question << "\n : ";
@@ -164,7 +172,7 @@ int main(){
 		std::ifstream db_file(db_path);
 		if(!db_file) return EXIT_FAILURE;
 		std::string db_text({std::istreambuf_iterator<char>(db_file),
-		                     std::istreambuf_iterator<char>()});
+		    std::istreambuf_iterator<char>()});
 		qadb.deserialize(db_text);
 	}
 
