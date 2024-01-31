@@ -21,7 +21,8 @@ auto operator<(_MemberCheckerBound<T> const e,std::vector<T> const v){
 struct _MemberChecker{};
 template<typename T>
 auto operator+(T lhs,_MemberChecker){ return (_MemberCheckerBound<T>)lhs; }
-#define in + _MemberChecker() < std::vector
+#define in + _MemberChecker() <
+#define in_v in std::vector
 //template<typename T>
 //bool in(T e,std::vector<T> const v){ return std::ranges::find(v, e) != v.end(); }
 
@@ -104,9 +105,9 @@ struct QAdb{
 	}
 } qadb;
 
-bool isYes(std::string const& answer){ return answer in {"yes"s,"y"s,"yep"s}; }
-bool isNo(std::string const& answer){ return answer in {"no"s,"n"s,"nope"s}; }
-bool isInvalid(std::string const& answer){ return answer in {"invalid"s,"i"s}; }
+bool isYes(std::string const& answer){ return answer in_v {"yes"s,"y"s,"yep"s}; }
+bool isNo(std::string const& answer){ return answer in_v {"no"s,"n"s,"nope"s}; }
+bool isInvalid(std::string const& answer){ return answer in_v {"invalid"s,"i"s}; }
 
 std::string ask_str(const std::string& question){
 	std::cout << question << "\n : ";
