@@ -3,8 +3,12 @@ a,Cat
 a,Dog
 q,0,1,Whiskers
 a,Holonomy
-q,2,6,Physicality
+q,10,6,Physicality
 a,Sphere
 q,8,3,Dimensions
 a,Torus
 q,7,5,Hole(s)
+a,Post Letter
+q,2,12,Biology
+a,Picture Frame
+q,9,11,Flat
